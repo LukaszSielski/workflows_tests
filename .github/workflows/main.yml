@@ -9,9 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       pr_number: ${{ steps.step1.outputs.pr_number }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # GH_REPO: ${{ github.repository_owner }}/${{ github.repository }}
     steps:
       - id: step1
-        run: echo ${{ github.event.head_commit.message }}
+        run: echo "${{ github.event.head_commit.message }}" | sed -n "s/^.*#\([0-9]*\).*$/\1/p"
+      - run: echo ${{ github.event.after }}
+      - run: echo ${{ github.event.repository.name }}
+      - run: |
+          output=$(gh pr list --json body --repo LukaszSielski/workflows_tests --search b2a801fe5874f9a8e06dc9d5dbd11afbd36943c3 --jq '.[].body') 
+          echo "$output"
       - run: echo "pr_number=${{ github.event.head_commit.message }}" >> "$GITHUB_OUTPUT"
 
   get-pr-number:
@@ -22,4 +30,4 @@ jobs:
         curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/LukaszSielski/workflows_tests/pulls/1 | jq -r .body
 
  
-  
+# output=$(gh pr list --json body --repo LukaszSielski/workflows_tests --search ${{ github.event.after }}) 
