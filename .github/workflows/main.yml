@@ -18,7 +18,7 @@ jobs:
       - name: Get PR's body
         id: get_pr_body
         run: |
-          echo "body=$(gh pr list --json body --repo $REPOSITORY --search $COMMIT_SHA --jq '.[].body')" >> $GITHUB_OUTPUT
+          echo "body=$(gh pr list --json body --repo $REPOSITORY --state all --search $COMMIT_SHA --jq '.[].body')" >> $GITHUB_OUTPUT
       - name: Print Azure Board reference from PR's body 
         run: echo "${{ steps.get_pr_body.outputs.body }}" | sed -n "$AB_REFERENCE_PATTERN"
 
