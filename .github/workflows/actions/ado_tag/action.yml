@@ -18,13 +18,12 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.gh-token }}
       run: |
-        prbody=$(gh pr list --json body --repo ${{ inputs.repository }} --state all --search ${{ inputs.commit-sha }} --jq '.[].body')
-        echo "PRs body: $prbody"
-        echo "body=$prbody" >> $GITHUB_OUTPUT
+        PRBODY=$(gh pr list --json body --repo ${{ inputs.repository }} --state all --search ${{ inputs.commit-sha }} --jq '.[].body')
+        echo "PRs body: $PRBODY"
       shell: bash
     - name: Extract work item reference number from PR's body
       id: extract-reference-number
       env:
         AB_REFERENCE_PATTERN: s/^.*AB#\([0-9]*\).*$/\1/p
-      run: echo "${{ steps.get_pr_body.outputs.body }}" | sed -n "$AB_REFERENCE_PATTERN"
+      run: echo "$PRBODY" | sed -n "$AB_REFERENCE_PATTERN"
       shell: bash
