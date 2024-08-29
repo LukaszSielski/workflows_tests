@@ -1,0 +1,30 @@
+name: Azure DevOps workitem tagging
+description: Action used for tagging specific work item with environment value
+inputs:
+  gh-token:
+    description: GitHub token necessary for interacting with GitHub CLI
+    required: true
+  repository: 
+    description: Repsoitory name in form of OWNER/REPOSITORY_NAME
+    required: true
+  commit-sha: 
+    description: Commit SHA by which related PR is searched for AB# tag
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Get PR's body for commit identified by ${{ inputs.commit-sha }} SHA
+      id: get-pr-body
+      env:
+        GH_TOKEN: ${{ inputs.gh-token }}
+      run: |
+        pr-body=$(gh pr list --json body --repo ${{ inputs.repository }} --state all --search ${{ inputs.commit-sha }} --jq '.[].body')
+        echo "PRs body: $pr-body"
+        echo "body=$pr-body" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Extract work item reference number from PR's body
+      id: extract-reference-number
+      env:
+        AB_REFERENCE_PATTERN: s/^.*AB#\([0-9]*\).*$/\1/p
+      run: echo "${{ steps.get_pr_body.outputs.body }}" | sed -n "$AB_REFERENCE_PATTERN"
+      shell: bash
