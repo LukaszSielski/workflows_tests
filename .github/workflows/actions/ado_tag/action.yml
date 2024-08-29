@@ -20,6 +20,7 @@ runs:
       run: |
         PRBODY=$(gh pr list --json body --repo ${{ inputs.repository }} --state all --search ${{ inputs.commit-sha }} --jq '.[].body')
         echo "PRs body: $PRBODY"
+        echo "PRBODY=${PRBODY}" >> $GITHUB_ENV
       shell: bash
     - name: Extract work item reference number from PR's body
       id: extract-reference-number
