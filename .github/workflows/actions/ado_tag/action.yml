@@ -23,7 +23,5 @@ runs:
       shell: bash
     - name: Extract work item reference number from PR's body
       id: extract-reference-number
-      env:
-        AB_REFERENCE_PATTERN: s/^.*AB#\([0-9]*\).*$/\1/p
-      run: echo "$PRBODY" | sed -n "$AB_REFERENCE_PATTERN"
+      run: echo "$PRBODY" | sed -n "s/^.*AB#\([0-9]*\).*$/\1/p"
       shell: bash
