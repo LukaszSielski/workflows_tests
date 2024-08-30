@@ -15,25 +15,4 @@ jobs:
           gh-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           commit-sha: ${{ github.event.after }}
-# jobs:
-#   get-pr-number-from-commit-message:
-#     runs-on: ubuntu-latest
-#     outputs:
-#       pr_number: ${{ steps.step1.outputs.pr_number }}
-#     env:
-#       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       REPOSITORY: ${{ github.repository }}
-#       COMMIT_SHA: ${{ github.event.after }}
-#       AB_REFERENCE_PATTERN: s/^.*AB#\([0-9]*\).*$/\1/p
-#     steps:
-#       - name: Get PR's body
-#         id: get_pr_body
-#         run: |
-#           echo "body=$(gh pr list --json body --repo $REPOSITORY --state all --search $COMMIT_SHA --jq '.[].body')" >> $GITHUB_OUTPUT
-#       - name: Print Azure Board reference from PR's body 
-#         run: echo "${{ steps.get_pr_body.outputs.body }}" | sed -n "$AB_REFERENCE_PATTERN"
-
-
-# output=$(gh pr list --json body --repo LukaszSielski/workflows_tests --search ${{ github.event.after }})\
-          # output=$(gh pr list --json body --repo ${{ github.repository_owner }}/${{ github.repository }} --search b2a801fe5874f9a8e06dc9d5dbd11afbd36943c3 --jq '.[].body') 
-          # echo "$output"
+          deploy_env: DEV

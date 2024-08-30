@@ -10,6 +10,9 @@ inputs:
   commit-sha: 
     description: Commit SHA by which related PR is searched for AB# tag
     required: true
+  deploy_env:
+    description: Environment to which changes were deployed
+    required: true
 runs:
   using: composite
   steps:
@@ -18,11 +21,25 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.gh-token }}
       run: |
-        PRBODY=$(gh pr list --json body --repo ${{ inputs.repository }} --state all --search ${{ inputs.commit-sha }} --jq '.[].body')
+        PRBODY=$(gh pr list --json body --repo ${{ inputs.repository }} --state merged --search ${{ inputs.commit-sha }} --jq '.[].body')
         echo "PRs body: $PRBODY"
         echo "PRBODY=${PRBODY}" >> $GITHUB_ENV
       shell: bash
     - name: Extract work item reference number from PR's body
       id: extract-reference-number
-      run: echo "$PRBODY" | sed -n "s/^.*AB#\([0-9]*\).*$/\1/p"
+      run: |
+        reference_num=$(echo $PRBODY | sed -n "s/^.*AB#\([0-9]*\).*$/\1/p")
+        if [ -z "$reference_num" ]
+        then
+          echo "Reference number not found!"
+          exit 1
+        else
+          echo "Reference number is $reference_num"
+          echo "REFERENCE=${reference_num}" >> $GITHUB_ENV
+        fi
+      shell: bash
+    - name: Add env tag for workitem
+      id: tag-workitem
+      run: |
+        echo "Going to add tag ${{ inputs.deploy_env }} to a work item identified by $REFERENCE number."
       shell: bash
