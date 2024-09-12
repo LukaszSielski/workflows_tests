@@ -4,11 +4,8 @@ inputs:
   gh-token:
     description: GitHub token necessary for interacting with GitHub CLI
     required: true
-  repository: 
-    description: Repsoitory name in form of OWNER/REPOSITORY_NAME
-    required: true
-  commit-sha: 
-    description: Commit SHA by which related PR is searched for AB# tag
+  azure-pat:
+    description: PAT
     required: true
   deploy_env:
     description: Environment to which changes were deployed
@@ -16,30 +13,26 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Get PR's body for commit identified by ${{ inputs.commit-sha }} SHA
-      id: get-pr-body
-      env:
+    # - shell: bash
+    #   env:
+    #     EVENT_CONTEXT: ${{ toJSON(github.event) }}
+    #   run: echo $EVENT_CONTEXT
+    - env:
         GH_TOKEN: ${{ inputs.gh-token }}
-      run: |
-        PRBODY=$(gh pr list --json body --repo ${{ inputs.repository }} --state merged --search ${{ inputs.commit-sha }} --jq '.[].body')
-        echo "PRs body: $PRBODY"
-        echo "PRBODY=${PRBODY}" >> $GITHUB_ENV
+        AZURE_DEVOPS_EXT_PAT: ${{ inputs.azure-pat }}
+      if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.event != 'workflow_dispatch' }}
       shell: bash
-    - name: Extract work item reference number from PR's body
-      id: extract-reference-number
       run: |
-        reference_num=$(echo $PRBODY | sed -n "s/^.*AB#\([0-9]*\).*$/\1/p")
-        if [ -z "$reference_num" ]
-        then
-          echo "Reference number not found!"
-          exit 1
-        else
-          echo "Reference number is $reference_num"
-          echo "REFERENCE=${reference_num}" >> $GITHUB_ENV
-        fi
-      shell: bash
-    - name: Add env tag for workitem
-      id: tag-workitem
-      run: |
-        echo "Going to add tag ${{ inputs.deploy_env }} to a work item identified by $REFERENCE number."
-      shell: bash
+        python /home/runner/work/workflows_tests/workflows_tests/scripts/script.py --commit-sha ${{ github.event.workflow_run.head_sha }} --deploy_env ${{ inputs.deploy_env }}
+    # - id: failing_step
+    #   continue-on-error: true
+    #   shell: bash
+    #   run: exit 0
+    # - id: test_failure
+    #   if: ${{ steps.failing_step.outcome == 'failure' }}
+    #   shell: bash
+    #   run: echo "Failed"
+    # - id: test_success
+    #   if: ${{ steps.failing_step.outcome == 'success' }}
+    #   shell: bash
+    #   run: echo "Success"

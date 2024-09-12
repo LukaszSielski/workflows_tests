@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - build
+    types:
+      - completed
+
+
+jobs:
+  tag-azure-board-work-item:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repository
+      - uses: ./.github/workflows/actions/ado_tag
+        with:
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
+          azure-pat: ${{ secrets.ADO_PAT }}
+          deploy_env: DEV

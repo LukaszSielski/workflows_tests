@@ -1,18 +1,13 @@
-name: test
+name: build
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
-  tag-azure-board-work-item:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        name: Checkout repository
-      - uses: ./.github/workflows/actions/ado_tag
-        with:
-          gh-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          commit-sha: ${{ github.event.after }}
-          deploy_env: DEV
+      - shell: bash
+        run: echo "Build"
