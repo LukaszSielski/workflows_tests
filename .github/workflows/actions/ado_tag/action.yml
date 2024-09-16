@@ -18,7 +18,7 @@ runs:
         EVENT_CONTEXT: ${{ toJSON(github.event) }}
       run: echo ${{ github.token }}
     - env:
-        GH_TOKEN: ${{ inputs.gh-token }}
+        GH_TOKEN: ${{ github.token }}
         AZURE_DEVOPS_EXT_PAT: ${{ inputs.azure-pat }}
       if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.event != 'workflow_dispatch' }}
       shell: bash
