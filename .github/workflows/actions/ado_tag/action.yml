@@ -13,10 +13,10 @@ inputs:
 runs:
   using: composite
   steps:
-    # - shell: bash
-    #   env:
-    #     EVENT_CONTEXT: ${{ toJSON(github.event) }}
-    #   run: echo $EVENT_CONTEXT
+    - shell: bash
+      env:
+        EVENT_CONTEXT: ${{ toJSON(github.event) }}
+      run: echo ${{ github.token }}
     - env:
         GH_TOKEN: ${{ inputs.gh-token }}
         AZURE_DEVOPS_EXT_PAT: ${{ inputs.azure-pat }}
