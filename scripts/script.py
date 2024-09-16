@@ -16,7 +16,7 @@ class _Const(object):
         return 'gh pr list --json body --state merged --search {commit_sha}'
     @constant
     def ADO_TAG_PATTERN() -> re.Pattern:
-        return r"AB#\d{6}"
+        return r"AB#\d{1}"
     @constant
     def ADO_TAGGING_COMMAND() -> str:
         return 'az boards work-item update --id {work_item_id} --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags={deploy_env}" --output json'
