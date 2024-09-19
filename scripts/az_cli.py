@@ -1,6 +1,6 @@
 from subprocess import check_output, CalledProcessError, STDOUT
 
-def tag_work_items(self, work_items_ids: list[str], tag: str) -> None:
+def tag_work_items(work_items_ids: list[str], tag: str) -> None:
     for work_item_id in work_items_ids:
         print(f'Trying to tag {work_item_id} with tag {tag}')
         try:
