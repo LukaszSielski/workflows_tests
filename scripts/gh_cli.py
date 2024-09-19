@@ -1,13 +1,23 @@
 import re
 import subprocess
+import json
 
 class GitHubCli:
     
-    def extract_data_from_pr_body(self, commit_sha: str, pattern: re.Pattern):
-        prBody = None
+    def extract_data_from_pr_body(self, commit_sha: str, pattern: re.Pattern) -> list[str]:
+        prDetails = None
         try:
-            prBody = subprocess.check_output(f'gh pr list --json body --state merged --search {commit_sha}', shell=True, text=True)
+            prDetails = subprocess.check_output(f'gh pr list --json body --state merged --search {commit_sha}', shell=True, text=True)
         except subprocess.CalledProcessError as e:
             raise Exception(f'Failed to retrieve PR body! {e.stderr}')
-        print(prBody)
+        prDetailsJson = json.loads(prDetails)
+        if len(prDetailsJson) == 0:
+            return ''
+        a = list(map(lambda e: e.split('#')[1], prDetailsJson[0]['body']))
+        print(a)
+        return a
+        
+        
+        
+        
         
