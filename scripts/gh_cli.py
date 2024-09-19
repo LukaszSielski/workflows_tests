@@ -12,7 +12,7 @@ class GitHubCli:
             raise Exception(f'Failed to retrieve PR body! {e.stderr}')
         prDetailsJson = json.loads(prDetails, strict=False)
         print(prDetailsJson)
-        return prDetailsJson[0]['body'] if len(prDetailsJson) == 0 else ''
+        return prDetailsJson[0]['body'] if len(prDetailsJson) != 0 else ''
     
     def extract_data_from_pr_body(self, commit_sha: str, pattern: re.Pattern) -> list[str]:
         print(self.extract_pr_body(commit_sha))
