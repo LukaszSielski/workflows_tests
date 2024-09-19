@@ -1,7 +1,6 @@
 import re
 import subprocess
 import json
-from typing import TypeVar, Callable
 
 class GitHubCli:
     
@@ -15,13 +14,8 @@ class GitHubCli:
         print(prDetailsJson)
         return prDetailsJson[0]['body'] if len(prDetailsJson) == 0 else ''
     
-    T = TypeVar('T')
-    def extract_data_from_pr_body(self, commit_sha: str, pattern: re.Pattern, mapping: Callable[[str], T]) -> list[T]:
-        finds = re.findall(pattern, self.extract_pr_body(commit_sha))
-        print(finds)
-        a = list(map(mapping, finds))
-        print(a)
-        return a
+    def extract_data_from_pr_body(self, commit_sha: str, pattern: re.Pattern) -> list[str]:
+        return re.findall(pattern, self.extract_pr_body(commit_sha))
         
         
         
