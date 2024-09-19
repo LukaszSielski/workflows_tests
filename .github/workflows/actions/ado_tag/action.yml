@@ -7,7 +7,7 @@ inputs:
   deploy_env:
     description: Environment to which changes were deployed
     required: true
-runs: 
+runs:
   using: composite
   steps:
     - shell: bash
