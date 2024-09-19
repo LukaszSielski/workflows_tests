@@ -1,9 +1,6 @@
 name: Azure DevOps workitem tagging
 description: Action used for tagging specific work item with environment value
 inputs:
-  gh-token:
-    description: GitHub token necessary for interacting with GitHub CLI
-    required: true
   azure-pat:
     description: PAT
     required: true
