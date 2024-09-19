@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import json
 import re
+from gh_cli import GitHubCli
 
 def constant(f):
     def fset(self, value):
@@ -22,6 +23,7 @@ class _Const(object):
         return 'az boards work-item update --id {work_item_id} --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags={deploy_env}" --output json'
     
 CONST = _Const()
+GH_CLI = GitHubCli()
 
 def parseArguments():
     parser = argparse.ArgumentParser(description="Utility to tag ADO workitem with deployment environemnt", exit_on_error=False)
@@ -54,6 +56,7 @@ def main():
     commitSha = args.commit_sha
     deploymentEnv = args.deploy_env
     tagAdoWorkItem(extractWorkItemIdFromPR(commitSha), deploymentEnv)
+    GH_CLI.extract_data_from_pr_body(commit_sha=commitSha, pattern=r"AB#\d{1}")
 
 if __name__ == '__main__':
     try:
