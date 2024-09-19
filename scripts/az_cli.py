@@ -12,6 +12,6 @@ class AzCli:
                 output = check_output(f'az boards work-item update --id {work_item_id} --fields "System.Tags={tag}', shell=True, stderr=subprocess.STDOUT)
                 update_result.update({work_item_id: output})
             except CalledProcessError as e:
-                print(f"Update process failed for {work_item_id}")
+                print(f"Update process failed for {work_item_id}, error: {e}")
                 update_result.update({work_item_id: e.stderr})
         print(update_result)
