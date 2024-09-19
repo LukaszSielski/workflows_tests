@@ -10,7 +10,7 @@ class GitHubCli:
             prDetails = subprocess.check_output(f'gh pr list --json body --state merged --search {commit_sha}', shell=True, text=True)
         except subprocess.CalledProcessError as e:
             raise Exception(f'Failed to retrieve PR body! {e.stderr}')
-        prDetailsJson = json.loads(prDetails, strict=False)
+        prDetailsJson = json.loads(prDetails)
         print(prDetailsJson)
         return prDetailsJson[0]['body'] if len(prDetailsJson) != 0 else ''
     
