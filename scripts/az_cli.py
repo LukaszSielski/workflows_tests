@@ -13,5 +13,6 @@ class AzCli:
                 update_result.update({work_item_id: output})
             except CalledProcessError as e:
                 print(f"Update process failed for {work_item_id}, error: {e}")
-                update_result.update({work_item_id: e.stderr})
+                print(f"{e.output}/{e.returncode}/{e.stdout}/{e.stderr}")
+                update_result.update({work_item_id: e.output})
         print(update_result)
