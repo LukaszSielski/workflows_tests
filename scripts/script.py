@@ -57,6 +57,7 @@ def main():
     deploymentEnv = args.deploy_env
     # tagAdoWorkItem(extractWorkItemIdFromPR(commitSha), deploymentEnv)
     x = GH_CLI.extract_data_from_pr_body(commitSha, r'AB#(\d+)')
+    print(x)
 
 if __name__ == '__main__':
     try:
