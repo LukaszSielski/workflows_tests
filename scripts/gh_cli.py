@@ -14,7 +14,8 @@ class GitHubCli:
         print(prDetailsJson)
         if len(prDetailsJson) == 0:
             return ''
-        a = list(map(lambda e: e.split('#')[1], prDetailsJson[0]['body']))
+        finds = re.findall(pattern, prDetailsJson[0]['body'])
+        a = list(map(lambda e: e.split('#')[1], finds))
         print(a)
         return a
         
