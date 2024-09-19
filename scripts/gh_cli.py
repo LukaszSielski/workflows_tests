@@ -5,7 +5,7 @@ from typing import TypeVar, Callable
 
 class GitHubCli:
     
-    def extract_pr_body(commit_sha: str) -> str:
+    def extract_pr_body(self, commit_sha: str) -> str:
         prDetails = None
         try:
             prDetails = subprocess.check_output(f'gh pr list --json body --state merged --search {commit_sha}', shell=True, text=True)
