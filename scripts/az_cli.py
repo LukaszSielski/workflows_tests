@@ -9,7 +9,7 @@ class AzCli:
             print(f'Trying to tag {work_item_id}')
             output = None
             try:
-                output = check_output(f'az boards work-item update --id {work_item_id} --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags={tag}', shell=True, stderr=subprocess.STDOUT)
+                output = check_output(f'az boards work-item update --id {work_item_id} --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags={tag}"', shell=True, stderr=subprocess.STDOUT)
                 update_result.update({work_item_id: output})
             except CalledProcessError as e:
                 print(f"Update process failed for {work_item_id}, error: {e}")
