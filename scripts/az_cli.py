@@ -3,7 +3,7 @@ from subprocess import check_output, CalledProcessError
 
 class AzCli:
     
-    def tag_work_items(work_items_ids: list[str], tag: str):
+    def tag_work_items(self, work_items_ids: list[str], tag: str):
         update_result = {}
         for work_item_id in work_items_ids:
             output = None
