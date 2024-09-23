@@ -18,4 +18,4 @@ jobs:
       - uses: ./.github/workflows/actions/ado_tag
         with:
           azure-pat: ${{ secrets.ADO_PAT }}
-          deploy_env: DEV
+          deploy_env: apollo-dev
