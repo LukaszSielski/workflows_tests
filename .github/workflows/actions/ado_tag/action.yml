@@ -20,7 +20,7 @@ runs:
       if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.event != 'workflow_dispatch' }}
       shell: bash
       run: |
-        python /home/runner/work/workflows_tests/workflows_tests/scripts/script.py --commit-sha d94b5f7ec7c6d7602c78a5e9b8a5b8c94d093eda --deploy-env ${{ inputs.deploy_env }}
+        python /home/runner/work/workflows_tests/workflows_tests/scripts/script.py --commit-sha ${{ github.event.workflow_run.head_sha }} --deploy-env ${{ inputs.deploy_env }}
     # - id: failing_step
     #   continue-on-error: true
     #   shell: bash

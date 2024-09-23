@@ -37,7 +37,7 @@ ENVS = {
     },
     "dev": {
         "env": "dev",
-        "tag": "VNXT CL GOLDEN Dev"
+        "tag": "VNXT CL Dev"
     },
     "dev-iot": {
         "env": "dev",
