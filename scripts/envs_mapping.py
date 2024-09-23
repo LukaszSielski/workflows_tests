@@ -103,7 +103,7 @@ ENVS = {
 
 def get_tag(env: str) -> str:
     try:
-        return ENVS[env]
+        return ENVS[env]["tag"]
     except KeyError:
         print(f"Mapping for {env} to tagging value not found!")
         raise Exception(f"Mapping for {env} to tagging value not found!")
