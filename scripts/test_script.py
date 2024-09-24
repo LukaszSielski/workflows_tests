@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 import argparse
 from gh_cli import PrNotFoundException, GhCliException
+from az_cli import AzCliException
 import script
 import subprocess
 
@@ -16,7 +17,7 @@ class TestTagging(unittest.TestCase):
         script.main()
         
         gh_cli_check_output.assert_called_once_with('gh pr list --json body --state merged --search 123', shell=True, text=True, stderr=-2)
-        az_cli_check_output.assert_called_once_with('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, stderr=-2)
+        az_cli_check_output.assert_called_once_with('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, text=True, stderr=-2)
         
     def test_should_properly_tag_ado_work_items_if_many_work_item_tag_in_pr_body(self, az_cli_check_output, gh_cli_check_output, parse_args_mock):
         gh_cli_check_output.return_value = '[{"body":"AB#123456 AB#654321"}]'
@@ -25,8 +26,8 @@ class TestTagging(unittest.TestCase):
         
         gh_cli_check_output.assert_called_once_with('gh pr list --json body --state merged --search 123', shell=True, text=True, stderr=-2)
         az_cli_check_output.assert_has_calls([
-            mock.call('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, stderr=-2),
-            mock.call('az boards work-item update --id 654321 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, stderr=-2),
+            mock.call('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, text=True, stderr=-2),
+            mock.call('az boards work-item update --id 654321 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True, text=True, stderr=-2),
         ])
     
     def test_should_throw_exception_if_pr__not_found(self, az_cli_check_output, gh_cli_check_output, parse_args_mock):
@@ -42,3 +43,11 @@ class TestTagging(unittest.TestCase):
         with self.assertRaises(GhCliException) as e:
             script.main()
         self.assertEquals('Failed to execute GH CLI command! Error: Error!', str(e.exception))
+
+    def test_should_throw_exception_if_az_cli_command_failed(self, az_cli_check_output, gh_cli_check_output, parse_args_mock):
+        gh_cli_check_output.return_value = '[{"body":"AB#123456 AB#654321"}]'
+        az_cli_check_output.side_effect = subprocess.CalledProcessError('test', 'test', 'Error!')
+        
+        with self.assertRaises(AzCliException) as e:
+            script.main()
+        self.assertEquals('Failed to execute AZ CLI command! Error: Update process failed for 123456, error: Error!', str(e.exception))
