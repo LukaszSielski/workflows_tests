@@ -19,7 +19,7 @@ jobs:
       - name: Get sectet
         id: get-secret
         shell: bash
-        run: echo "azure-credentials=${{ secrets.SECRET }}" >> "$GITHUB_OUTOUT"
+        run: echo "azure-credentials=${{ secrets.SECRET }}" >> "$GITHUB_OUTPUT"
   tag-azure-board-work-item:
     runs-on: ubuntu-latest
     needs: get_secret
