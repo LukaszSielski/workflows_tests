@@ -17,6 +17,14 @@ class TestTagging(unittest.TestCase):
         
         gh_cli_check_output.assert_called_once_with('gh pr list --json body --state merged --search 123', shell=True, text=True)
         az_cli_check_call.assert_called_once_with('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True)
+       
+    def test_should_properly_tag_ado_work_item_if_single_work_item_tag_in_pr_body_multiline(self, az_cli_check_call, gh_cli_check_output, parse_args_mock):
+        gh_cli_check_output.return_value = '[{"body":"This is my pull request... \\n some more description \\n AB#123456"}]'
+        
+        script.main()
+        
+        gh_cli_check_output.assert_called_once_with('gh pr list --json body --state merged --search 123', shell=True, text=True)
+        az_cli_check_call.assert_called_once_with('az boards work-item update --id 123456 --org https://dev.azure.com/lukaszadamsielski0187 --fields "System.Tags=VNXT CL Dev"', shell=True)
         
     def test_should_properly_tag_ado_work_items_if_many_work_item_tag_in_pr_body(self, az_cli_check_call, gh_cli_check_output, parse_args_mock):
         gh_cli_check_output.return_value = '[{"body":"AB#123456 AB#654321"}]'
